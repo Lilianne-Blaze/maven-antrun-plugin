@@ -92,6 +92,21 @@ public class AntRunMojo extends AbstractMojo {
     public static final String DEFAULT_MAVEN_PROJECT_HELPER_REFID = MAVEN_REFID_PREFIX + "project.helper";
 
     /**
+     * The refid used to store the Maven session object in the Ant build. If this reference is retrieved in a custom
+     * task, note that this will be a clone of the Maven session, and not the session itself, when the task is called
+     * through an <code>ant</code> task.
+     */
+    public static final String DEFAULT_MAVEN_SESSION_REFID = MAVEN_REFID_PREFIX + "session";
+
+    /**
+     * The refid used to store an object of type {@link MavenAntRunSession} containing the Maven session object in the
+     * Ant build. This is useful when a custom task needs to change the Maven session, because, unlike
+     * {@link #DEFAULT_MAVEN_SESSION_REFID}, this makes sure to reference the same instance of the Maven session in all
+     * cases.
+     */
+    public static final String DEFAULT_MAVEN_SESSION_REF_REFID = MAVEN_REFID_PREFIX + "session.ref";
+
+    /**
      * The default target name.
      */
     public static final String DEFAULT_ANT_TARGET_NAME = "main";
@@ -357,6 +372,9 @@ public class AntRunMojo extends AbstractMojo {
         antProject.addReference(DEFAULT_MAVEN_PROJECT_REF_REFID, new MavenAntRunProject(mavenProject));
         antProject.addReference(DEFAULT_MAVEN_PROJECT_HELPER_REFID, projectHelper);
         antProject.addReference(MAVEN_REFID_PREFIX + "local.repository", localRepository);
+
+        antProject.addReference(DEFAULT_MAVEN_SESSION_REFID, session);
+        antProject.addReference(DEFAULT_MAVEN_SESSION_REF_REFID, new MavenAntRunSession(session));
     }
 
     /**
